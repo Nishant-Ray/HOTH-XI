@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {createLobby, joinPrivateLobby, findNearbyUsers} from  "./lobby.js";
+import {createLobby, joinLobby, findNearbyUsers} from  "./lobby.js";
 import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics.js";
 const router = express.Router();
 
@@ -124,10 +124,10 @@ router.post("/login", async (req, res) => {
 });
 router.post("/create-lobby", async (req, res) => {
 
-  const {location} = req.body;
+  const {location, isPrivate} = req.body;
 
   try {
-    const lobby = await createLobby(auth.userId, true, location);
+    const lobby = await createLobby(auth.userId, isPrivate, location);
     res.status(200).json({ message: "Lobby created successfully", lobby });
   } catch (error) {
     res.status(500).json({ message: `Failed to create lobby: ${error.message}` });

@@ -1,18 +1,18 @@
 import { io } from "./app.js"
 import {db} from "./firebase.js"
-import { setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 export const createLobby = async (user, isPrivate, location) => {
     console.log(
         location
     );
     let code = "123" //create function for generating code
-    await setDoc(doc(db, "lobbies", code)),
+    await setDoc(doc(db, "lobbies", code),
       {
-        location: location,
+        location: [location["latitude"], location["longitude"]],
         players: [user],
         private: isPrivate,
-      };
+      });
     const newLobby = io.of(`/${code}`);
     newLobby.on('connection', (socket) => {
         console.log(`User connected to ${socket}`);
