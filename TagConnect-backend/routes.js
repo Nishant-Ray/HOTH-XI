@@ -1,4 +1,5 @@
-import { app, db, auth} from "firebase.js"
+import express from 'express'
+import { app, db, auth} from "./firebase.js"
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -15,9 +16,9 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {createLobby, joinPrivateLobby, findNearbyUsers} from  "./lobby";
-import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics";
-const userRouter = express.Router();
+import {createLobby, joinPrivateLobby, findNearbyUsers} from  "./lobby.js";
+import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics.js";
+const router = express.Router();
 
 const updateLocation = async (req, res, next) => {
   try {
@@ -36,15 +37,15 @@ const checkGameArea = async (req, res, next) => {
   }
 };
 
-userRouter.put("/update-location/:playerId", updateLocation, (req, res) => {
+router.put("/update-location/:playerId", updateLocation, (req, res) => {
   res.status(200).json({ message: "Location updated successfully" });
 });
 
-userRouter.get("/check-game-area/:playerId",checkGameArea,(req, res) => {
+router.get("/check-game-area/:playerId",checkGameArea,(req, res) => {
     res.status(200).json({ message: "Player is within game area" });
   }
 );
-userRouter.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   console.log("Signing up");
 
   const { email, username, password } = req.body;
@@ -89,7 +90,7 @@ userRouter.post("/signup", async (req, res) => {
       return res.status(401).json({ success: false, message: error.message });
   }
 });
-userRouter.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   console.log("Logging in");
 
   const { email, password } = req.body;
@@ -121,27 +122,30 @@ userRouter.post("/login", async (req, res) => {
               .json({ success: false, message: error.message });
       });
 });
-userRouter.post("/create-private-lobby", async (req, res) => {
+router.post("/create-lobby", async (req, res) => {
+
+  const {location} = req.body;
+
   try {
-    const code = generateRandomCode(6); // Generate a 6-digit random alphanumeric code
-    const lobby = await createLobby(code, true);
-    res.status(200).json({ message: "Private lobby created successfully", lobby });
+    const lobby = await createLobby(auth.userId, true, location);
+    res.status(200).json({ message: "Lobby created successfully", lobby });
   } catch (error) {
-    res.status(500).json({ message: "Failed to create private lobby" });
+    res.status(500).json({ message: `Failed to create lobby: ${error.message}` });
   }
 });
 
-userRouter.post("/join-private-lobby", async (req, res) => {
+router.post("/join-lobby", async (req, res) => {
+
   try {
     const { code } = req.body;
-    const lobby = await joinPrivateLobby(code); 
+    const lobby = await joinLobby(code); 
     res.status(200).json({ message: "Joined private lobby successfully", lobby });
   } catch (error) {
     res.status(401).json({ message: "Invalid or taken invite code." });
   }
 });
 
-userRouter.post("/find-public-lobby", async (req, res) => {
+router.post("/find-public-lobby", async (req, res) => {
   try {
     const { userId, radius } = req.body;
     const nearbyUsers = await findNearbyUsers(userId, radius); // Find nearby users within the specified radius
@@ -154,7 +158,7 @@ userRouter.post("/find-public-lobby", async (req, res) => {
     res.status(500).json({ message: "Failed to find public lobby" });
   }
 });
-userRouter.post("/start-game/:lobbyCode", async (req, res) => {
+router.post("/start-game/:lobbyCode", async (req, res) => {
   try {
     // Implementation for starting the game
   } catch (err) {
@@ -162,7 +166,7 @@ userRouter.post("/start-game/:lobbyCode", async (req, res) => {
   }
 });
 
-userRouter.post("/end-game/:lobbyCode", async (req, res) => {
+router.post("/end-game/:lobbyCode", async (req, res) => {
   try {
     // Implementation for ending the game
   } catch (err) {
@@ -170,7 +174,7 @@ userRouter.post("/end-game/:lobbyCode", async (req, res) => {
   }
 });
 
-userRouter.post("/submit-answer/:playerId", async (req, res) => {
+router.post("/submit-answer/:playerId", async (req, res) => {
   try {
       const { playerId } = req.params;
       const { answer } = req.body;
@@ -185,7 +189,7 @@ userRouter.post("/submit-answer/:playerId", async (req, res) => {
     }
   });
 
-userRouter.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
+router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   try {
       const { taggerId, tageeId } = req.params;
       // Call the controller function to tag the player
@@ -198,7 +202,7 @@ userRouter.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   }
 });
 
-userRouter.post("/ask-question/:askerId/:targetId", async (req, res) => {
+router.post("/ask-question/:askerId/:targetId", async (req, res) => {
   try {
     const { playerId } = req.params;
     const { question } = req.body;
@@ -211,4 +215,4 @@ userRouter.post("/ask-question/:askerId/:targetId", async (req, res) => {
   }
 });
 
-export default userRouter;
+export default router;
