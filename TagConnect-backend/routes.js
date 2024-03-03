@@ -15,19 +15,21 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {createLobby, joinLobby, findNearbyUsers} from  "./lobby.js";
 import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics.js";
 const router = express.Router();
 
-const updateLocation = async (req, res, next) => {
+const updateLocation = async (userLocation) => {
   try {
-   // implementation
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      location: userLocation,
+    })
   } 
   catch (err) {
     res.status(500).json({ message: "Location Not Found" });
   }
 };
+
 const checkGameArea = async (req, res, next) => {
   try {
     // implementation
@@ -36,10 +38,6 @@ const checkGameArea = async (req, res, next) => {
     res.status(500).json({ message: "Game Area Check Failed" });
   }
 };
-
-router.put("/update-location/:playerId", updateLocation, (req, res) => {
-  res.status(200).json({ message: "Location updated successfully" });
-});
 
 router.get("/check-game-area/:playerId",checkGameArea,(req, res) => {
     res.status(200).json({ message: "Player is within game area" });
@@ -74,7 +72,8 @@ router.post("/signup", async (req, res) => {
       const newUserData = {
           username: username,
           email: email,
-          fullname: fullname
+          fullname: fullname,
+          location: [0,0]
       };
       setDoc(doc(database, "users", user.uid), newUserData);
 
