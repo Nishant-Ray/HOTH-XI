@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {createLobby, joinPrivateLobby, findNearbyUsers} from  "./lobby";
-import {submitAnswer} from "./gameMechanics";
+import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics";
 const userRouter = express.Router();
 
 const updateLocation = async (req, res, next) => {

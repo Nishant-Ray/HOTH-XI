@@ -1,3 +1,30 @@
+export const setRole = async (playerID) => {
+    try {
+        // Randomly select a player to be the tagger
+        const taggerIndex = Math.floor(Math.random() * players.length);
+        const taggerId = players[taggerIndex];
+    
+        // Assign the tagger role to the selected player
+        const roles = {};
+        roles[taggerId] = "tagger";
+    
+        // Assign the taggee role to the rest of the players
+        players.forEach((playerId, index) => {
+          if (index !== taggerIndex) {
+            roles[playerId] = "taggee";
+          }
+        });
+    
+        // Implementation for setting roles in the database
+        // Example using Firebase Realtime Database
+        // await firebaseDatabase.ref(`lobbies/${lobbyId}/roles`).set(roles);
+    
+        return roles;//temp
+      } 
+    catch (error) {
+        throw new Error("Failed to set roles");
+    }
+};
 export const submitAnswer = async (playerId, answer) => {
     try {
       // Implementation for submitting the answer in the database
