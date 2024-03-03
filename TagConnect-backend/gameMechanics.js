@@ -62,4 +62,42 @@ export const submitAnswer = async (playerId, answer) => {
     }
   };
 
-
+  export const findClosestLobby = async (userId) => {
+    try {
+      // Get the user's location from the database
+      const userLocation = await getUserLocation(userId);
+  
+      // Query the database to get a list of all lobbies
+      const allLobbies = await getAllLobbies();
+  
+      let closestLobby;
+      let closestDistance = Infinity;
+  
+      allLobbies.forEach((lobby) => {
+        const distance = calculateDistance(userLocation, lobby.location);
+          if (distance < closestDistance) {
+          closestLobby = lobby;
+          closestDistance = distance;
+        }
+      });
+  
+      return closestLobby;
+    } 
+    catch (error) {
+      throw new Error("Failed to find closest lobby");
+    }
+  };
+  
+  const getUserLocation = async (userId) => {
+    // Implementation for getting user's location from the database
+    
+  };
+  
+  // Example function to get all lobbies from the database
+  const getAllLobbies = async () => {
+    // Implementation for getting all lobbies from the database
+  };
+  
+  const calculateDistance = (location1, location2) => {
+    return  Math.sqrt(Math.pow(location2.latitude - location1.latitude,  2) + Math.pow(location2.longitude - location1.longitude, 2));
+  };

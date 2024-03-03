@@ -127,7 +127,7 @@ router.post("/create-lobby", async (req, res) => {
   const {location, isPrivate} = req.body;
 
   try {
-    const lobby = await createLobby(auth.userId, isPrivate, location);
+    const lobby = await createLobby(auth.currentUser.uid, isPrivate, location);
     res.status(200).json({ message: "Lobby created successfully", lobby });
   } catch (error) {
     res.status(500).json({ message: `Failed to create lobby: ${error.message}` });
@@ -138,7 +138,7 @@ router.post("/join-lobby", async (req, res) => {
 
   try {
     const { code } = req.body;
-    const lobby = await joinLobby(code); 
+    const lobby = await joinLobby(auth.currentUser.uid, code); 
     res.status(200).json({ message: "Joined private lobby successfully", lobby });
   } catch (error) {
     res.status(401).json({ message: "Invalid or taken invite code." });
@@ -215,4 +215,17 @@ router.post("/ask-question/:askerId/:targetId", async (req, res) => {
   }
 });
 
+router.get("/find-lobby/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Call the controller function to find the closest lobby
+    const closestLobby = await findClosestLobby(userId);
+
+    res.status(200).json({ closestLobby });
+  } 
+  catch (error) {
+    res.status(500).json({ message: "Failed to find closest lobby", error: error.message });
+  }
+});
 export default router;
