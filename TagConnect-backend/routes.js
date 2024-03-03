@@ -15,6 +15,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {createLobby, joinPrivateLobby, findNearbyUsers} from  "./lobby";
+import {submitAnswer} from "./gameMechanics";
 const userRouter = express.Router();
 
 const updateLocation = async (req, res, next) => {
@@ -170,23 +172,40 @@ userRouter.post("/end-game/:lobbyCode", async (req, res) => {
 
 userRouter.post("/submit-answer/:playerId", async (req, res) => {
   try {
-    // Implementation for submitting an answer
-  } catch (err) {
-    res.status(401).json({ message: "Incorrect Answer" });
-  }
-});
+      const { playerId } = req.params;
+      const { answer } = req.body;
+  
+      // Call the controller function to submit the answer
+      const result = await submitAnswer(playerId, answer);
+  
+      res.status(200).json({ message: "Answer submitted successfully", result });
+    } 
+    catch (error) {
+      res.status(500).json({ message: "Failed to submit answer", error: error.message });
+    }
+  });
 
 userRouter.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   try {
-    // Implementation for tagging a player
-  } catch (err) {
+      const { taggerId, tageeId } = req.params;
+      // Call the controller function to tag the player
+      const result = await tagPlayer(taggerId, tageeId);
+  
+      res.status(200).json({ message: "Player tagged successfully", result });
+    } 
+    catch (err) {
     res.status(500).json({ message: "Failed to tag player" });
   }
 });
 
 userRouter.post("/ask-question/:askerId/:targetId", async (req, res) => {
   try {
-    // Implementation for asking a question
+    const { playerId } = req.params;
+    const { question } = req.body;
+
+    // Call the controller function to ask the question
+    const result = await askQuestion(question, playerId);
+    res.status(200).json({ message: "Question asked successfully", result });
   } catch (err) {
     res.status(500).json({ message: "Failed to ask question" });
   }
