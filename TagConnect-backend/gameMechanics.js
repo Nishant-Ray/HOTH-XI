@@ -134,6 +134,9 @@ export const submitAnswer = async (playerId, answer) => {
   
   // Example function to get all lobbies from the database
   const getAllLobbies = async () => {
+    const docRef = doc(db, 'lobbies');
+    const docSnap = await getDoc(docRef);
+    return docSnap;
     // Implementation for getting all lobbies from the database
   };
 

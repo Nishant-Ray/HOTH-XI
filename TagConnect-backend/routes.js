@@ -15,20 +15,9 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import {createLobby, joinLobby, findNearbyUsers} from  "./lobby.js";
+import {createLobby, joinLobby, findNearbyLobbies} from  "./lobby.js";
 import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics.js";
 const router = express.Router();
-
-const updateLocation = async (userLocation) => {
-  try {
-    await updateDoc(doc(db, "users", auth.currentUser.uid), {
-      location: userLocation,
-    })
-  } 
-  catch (err) {
-    res.status(500).json({ message: "Location Not Found" });
-  }
-};
 
 const checkGameArea = async (req, res, next) => {
   try {
@@ -146,13 +135,8 @@ router.post("/join-lobby", async (req, res) => {
 
 router.post("/find-public-lobby", async (req, res) => {
   try {
-    const { userId, radius } = req.body;
-    const nearbyUsers = await findNearbyUsers(userId, radius); // Find nearby users within the specified radius
-    if (nearbyUsers.length < 9) {
-      throw new Error("Not enough nearby users to create a public lobby");
-    }
-    const lobby = await createLobby(null, false, nearbyUsers);
-    res.status(200).json({ message: "Public lobby created successfully", lobby });
+    const { location, radius } = req.body;
+    const nearbyUsers = await findNearbyLobbies(location, radius); // Find nearby users within the specified radius
   } catch (error) {
     res.status(500).json({ message: "Failed to find public lobby" });
   }
