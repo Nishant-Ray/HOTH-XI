@@ -228,4 +228,20 @@ router.get("/find-lobby/:userId", async (req, res) => {
     res.status(500).json({ message: "Failed to find closest lobby", error: error.message });
   }
 });
+router.get("/get-users-in-lobby/:lobbyId", async (req, res) => {
+  try {
+    const { lobbyId } = req.params;
+
+    // Call the controller function to get the lobby by its ID
+    const lobby = await getUsers(lobbyId);
+
+    if (!lobby) {
+      return res.status(404).json({ message: "Lobby not found" });
+    }
+    res.status(200).json({ lobby });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to get users in lobby", error: error.message });
+  }
+});
+
 export default router;

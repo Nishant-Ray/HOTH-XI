@@ -1,5 +1,26 @@
-export const setRole = async (playerID) => {
+import { app, db } from "./firebase.js"
+import {
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    updateDoc,
+  } from "firebase/firestore";
+
+export const getUsers = async (lobbyID) => {
+    const docRef = doc(db, "lobbies", lobbyID);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data()['players']);
+      } else {
+        console.log("No such document!");
+      }
+};
+export const setRole = async (lobbyID) => {
     try {
+        players = getUsers(lobbyID);
         // Randomly select a player to be the tagger
         const taggerIndex = Math.floor(Math.random() * players.length);
         const taggerId = players[taggerIndex];
@@ -7,6 +28,7 @@ export const setRole = async (playerID) => {
         // Assign the tagger role to the selected player
         const roles = {};
         roles[taggerId] = "tagger";
+        
     
         // Assign the taggee role to the rest of the players
         players.forEach((playerId, index) => {
@@ -90,7 +112,7 @@ export const submitAnswer = async (playerId, answer) => {
   
   const getUserLocation = async (userId) => {
     // Implementation for getting user's location from the database
-    
+
   };
   
   // Example function to get all lobbies from the database
