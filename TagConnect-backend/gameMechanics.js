@@ -28,7 +28,7 @@ export const setRole = async (lobbyID) => {
         // Assign the tagger role to the selected player
         const roles = {};
         roles[taggerId] = "tagger";
-        
+
     
         // Assign the taggee role to the rest of the players
         players.forEach((playerId, index) => {
@@ -112,14 +112,44 @@ export const submitAnswer = async (playerId, answer) => {
   
   const getUserLocation = async (userId) => {
     // Implementation for getting user's location from the database
-
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data()['location']);
+      } else {
+        console.log("No such document!");
+      }
   };
   
   // Example function to get all lobbies from the database
   const getAllLobbies = async () => {
     // Implementation for getting all lobbies from the database
   };
-  
-  const calculateDistance = (location1, location2) => {
-    return  Math.sqrt(Math.pow(location2.latitude - location1.latitude,  2) + Math.pow(location2.longitude - location1.longitude, 2));
-  };
+
+function calculateDistanceInMeters(location1, location2) {
+    const earthRadius = 6371000; // Radius of the Earth in meters
+    
+    // Convert latitude and longitude from degrees to radians
+    const lat1Rad = toRadians(location1.latitude);
+    const lon1Rad = toRadians(location1.longitude);
+    const lat2Rad = toRadians(location2.latitude);
+    const lon2Rad = toRadians(location2.longitude);
+    
+    // Calculate the differences between the latitudes and longitudes
+    const deltaLat = lat2Rad - lat1Rad;
+    const deltaLon = lon2Rad - lon1Rad;
+    
+    // Calculate the distance using the Haversine formula
+    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+              Math.cos(lat1Rad) * Math.cos(lat2Rad) *
+              Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = earthRadius * c;
+    
+    return distance;
+}
+
+// Function to convert degrees to radians
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
