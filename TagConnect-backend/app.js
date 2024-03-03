@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 // You have to specify the specific sub-router you want to access and then call the routes in that sub-router
 app.use("/", router);
 
-const portNum = 8000;
+const portNum = 8080;
 const hostName = "localhost";
 
 server.listen(portNum, hostName, async () => {

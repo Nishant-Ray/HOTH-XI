@@ -1,10 +1,8 @@
 import { io } from "./app.js";
 import { db, auth } from "./firebase.js";
-import { DocumentSnapshot, arrayUnion, doc, setDoc, updateDoc, docSnap } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { updateLocation, calculateDistanceInMeters, getAllLobbies } from "./gameMechanics.js";
 import { updateCurrentUser } from "firebase/auth";
-
-const user = auth.currentUser.uid;
 
 export const createLobby = async (user, isPrivate, location) => {
   let code = Math.floor(100000 + Math.random() * 900000);
@@ -24,20 +22,28 @@ export const joinLobby = async (user) => {
 };
 
 export const findNearbyLobbies = async (location, radius) => {
-    let lobbies = getAllLobbies();
-    lobbies = snapshot.docs.map(doc => {
-        const lobbyData = doc.data();
-        const distance = calculateDistance(location, lobbyData.location);
-        return {
-        id: doc.id,
-        location: lobbyLocation,
-        distance: distance
-        };
-    });
-    const filteredLobbies = lobbies.filter(
-        (lobby) => lobby.distance <= radius
-      );
-    return filteredLobbies;
+     try {
+       const lobbiesMap = await getAllLobbies();
+       const filteredLobbies = [];
+       lobbiesMap.forEach((lobbyLocation, id) => {
+         const coordinatesMap = new Map();
+         coordinatesMap.set("latitude", lobbyLocation[0]);
+         coordinatesMap.set("longitude", lobbyLocation[1]);
+
+        console.log(location);
+        console.log(coordinatesMap);
+
+         console.log(calculateDistanceInMeters(location, coordinatesMap));
+         if (calculateDistanceInMeters(location, lobbyLocation) <= radius) {
+           filteredLobbies.push(id);
+         }
+       });
+
+       return filteredLobbies;
+     } catch (error) {
+       console.error("Error finding nearby lobbies: ", error);
+       throw error; // Rethrow the error to handle it in the calling code
+     }
 }
 
 export const startGame = async (users) => {

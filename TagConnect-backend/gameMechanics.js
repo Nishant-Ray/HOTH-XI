@@ -1,6 +1,6 @@
 import { app, db } from "./firebase.js"
 import {
-    collection,
+  collection,
     deleteDoc,
     doc,
     getDoc,
@@ -133,11 +133,20 @@ export const submitAnswer = async (playerId, answer) => {
   };
   
   // Example function to get all lobbies from the database
-  const getAllLobbies = async () => {
-    const docRef = doc(db, 'lobbies');
-    const docSnap = await getDoc(docRef);
-    return docSnap;
-    // Implementation for getting all lobbies from the database
+  export const getAllLobbies = async () => {
+    const lobbies = collection(db, 'lobbies');
+    let nearby = new Map();
+    try {
+      const querySnapshot = await getDocs(lobbies);
+      querySnapshot.forEach((doc) => {
+        nearby.set(doc.id, doc.data().location);
+      });
+
+      return nearby;
+    } catch (error) {
+      console.error("Error getting documents: ", error);
+      throw error; // Rethrow the error to handle it in the calling code
+    }
   };
 
 function calculateDistanceInMeters(location1, location2) {
@@ -167,3 +176,5 @@ function calculateDistanceInMeters(location1, location2) {
 function toRadians(degrees) {
     return degrees * Math.PI / 180;
 }
+
+export {calculateDistanceInMeters}

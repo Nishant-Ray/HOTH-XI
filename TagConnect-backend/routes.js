@@ -136,7 +136,9 @@ router.post("/join-lobby", async (req, res) => {
 router.post("/find-public-lobby", async (req, res) => {
   try {
     const { location, radius } = req.body;
-    const nearbyUsers = await findNearbyLobbies(location, radius); // Find nearby users within the specified radius
+    const lobbies = await findNearbyLobbies(location, radius); // Find nearby users within the specified radius
+    res.status(200).json({ message: "Found public lobbies successfully", lobbies});
+
   } catch (error) {
     res.status(500).json({ message: "Failed to find public lobby" });
   }
