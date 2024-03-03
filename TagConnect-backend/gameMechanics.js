@@ -18,6 +18,17 @@ export const getUsers = async (lobbyID) => {
         console.log("No such document!");
       }
 };
+
+export const updateLocation = async (userLocation) => {
+  try {
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      location: userLocation,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Location Not Found" });
+  }
+};
+
 export const setRole = async (lobbyID) => {
     try {
         players = getUsers(lobbyID);

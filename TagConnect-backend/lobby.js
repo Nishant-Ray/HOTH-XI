@@ -1,33 +1,26 @@
-import { io } from "./app.js"
-import {db} from "./firebase.js"
-import { doc, setDoc } from "firebase/firestore";
+import { io } from "./app.js";
+import { db } from "./firebase.js";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 
 export const createLobby = async (user, isPrivate, location) => {
-    console.log(
-        location
-    );
-    let code = "123" //create function for generating code
-    await setDoc(doc(db, "lobbies", code),
-      {
-        location: [location["latitude"], location["longitude"]],
-        players: [user],
-        private: isPrivate,
-      });
-    const newLobby = io.of(`/${code}`);
-    newLobby.on('connection', (socket) => {
-        console.log(`User connected to ${socket}`);
-    });
-    return newLobby; 
-};
-  
-export const joinLobby = async (code) => {
-    // Implementation for joining a private lobby in the database
-};
-  
-export const findNearbyUsers = async (userId, radius) => {
-    // Implementation for finding nearby users based on user location and radius in the database
+  let code = "123"; //create function for generating code
+  await setDoc(doc(db, "lobbies", code), {
+    location: [location["latitude"], location["longitude"]],
+    players: [user],
+    private: isPrivate,
+  });
 };
 
-export const startGame = async (users) => {
-    
-}
+export const joinLobby = async (user) => {
+  // Implementation for joining a private lobby in the database
+  await updateDoc(doc(db, "lobbies", code), {
+     players : arrayUnion(user)
+  });
+
+};
+
+export const findNearbyUsers = async (userId, radius) => {
+  // Implementation for finding nearby users based on user location and radius in the database
+};
+
+export const startGame = async (users) => {};
