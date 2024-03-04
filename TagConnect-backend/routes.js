@@ -201,7 +201,7 @@ router.post("/ask-question/:askerId/:targetId", async (req, res) => {
   }
 });
 
-router.get("/get-users-in-lobby/:lobbyId", async (req, res) => {
+router.get("/get-users-in-lobby", async (req, res) => {
   try {
     const { lobbyId } = req.body;
 
@@ -217,7 +217,7 @@ router.get("/get-users-in-lobby/:lobbyId", async (req, res) => {
   }
 });
 
-router.post("/get-points/:lobbyId", async (req, res) => {
+router.post("/get-points", async (req, res) => {
   try {
     const { lobbyId } = req.body;
     
