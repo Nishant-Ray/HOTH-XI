@@ -9,6 +9,8 @@ import {
     updateDoc,
   } from "firebase/firestore";
 import { master_prompts } from "./questions.js";
+
+
 export const getUsers = async (lobbyID) => {
     const docRef = doc(db, "lobbies", lobbyID);
     const docSnap = await getDoc(docRef);
@@ -75,32 +77,6 @@ export const submitAnswer = async (playerId, answer) => {
       return { question, playerId };//temp
     } catch (error) {
       throw new Error("Failed to ask question");
-    }
-  };
-
-  export const findClosestLobby = async (userId) => {
-    try {
-      // Get the user's location from the database
-      const userLocation = await getUserLocation(userId);
-  
-      // Query the database to get a list of all lobbies
-      const allLobbies = await getAllLobbies();
-  
-      let closestLobby;
-      let closestDistance = Infinity;
-  
-      allLobbies.forEach((lobby) => {
-        const distance = calculateDistance(userLocation, lobby.location);
-          if (distance < closestDistance) {
-          closestLobby = lobby;
-          closestDistance = distance;
-        }
-      });
-  
-      return closestLobby;
-    } 
-    catch (error) {
-      throw new Error("Failed to find closest lobby");
     }
   };
   

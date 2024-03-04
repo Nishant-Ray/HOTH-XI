@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import {createLobby, joinLobby, findNearbyLobbies} from  "./lobby.js";
-import {submitAnswer, tagPlayer, askQuestion} from "./gameMechanics.js";
+import {submitAnswer, tagPlayer, askQuestion, getUsers} from "./gameMechanics.js";
 const router = express.Router();
 
 const checkGameArea = async (req, res, next) => {
@@ -133,7 +133,7 @@ router.post("/join-lobby", async (req, res) => {
   }
 });
 
-router.post("/find-public-lobby", async (req, res) => {
+router.post("/find-lobby", async (req, res) => {
   try {
     const { location, radius } = req.body;
     const lobbies = await findNearbyLobbies(location, radius); // Find nearby users within the specified radius
@@ -200,19 +200,6 @@ router.post("/ask-question/:askerId/:targetId", async (req, res) => {
   }
 });
 
-router.get("/find-lobby/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    // Call the controller function to find the closest lobby
-    const closestLobby = await findClosestLobby(userId);
-
-    res.status(200).json({ closestLobby });
-  } 
-  catch (error) {
-    res.status(500).json({ message: "Failed to find closest lobby", error: error.message });
-  }
-});
 router.get("/get-users-in-lobby/:lobbyId", async (req, res) => {
   try {
     const { lobbyId } = req.params;
