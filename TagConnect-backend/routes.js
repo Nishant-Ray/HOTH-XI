@@ -162,7 +162,7 @@ router.post("/end-game/:lobbyCode", async (req, res) => {
   }
 });
 
-router.post("/submit-answer/:playerId", async (req, res) => {
+router.post("/submit-answer", async (req, res) => {
   try {
       const { playerId, answer } = req.body;
   
@@ -176,7 +176,7 @@ router.post("/submit-answer/:playerId", async (req, res) => {
     }
   });
 
-router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
+router.post("/tag-player", async (req, res) => {
   try {
       const { taggerId, taggeeId, lobbyId } = req.body;
       // Call the controller function to tag the player
