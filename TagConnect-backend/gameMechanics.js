@@ -15,8 +15,16 @@ export const getUsers = async (lobbyId) => {
     const docRef = doc(db, "lobbies", lobbyId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data()['players']);
-        return docSnap.data()['players'];
+        const playerIds = docSnap.data()['players'];
+        // Use map and Promise.all to wait for all promises to resolve
+        const namesPromises = playerIds.map(async (id) => {
+          const name = (await getDoc(doc(db, "users", id))).data().fullname;
+          return name;
+        });
+
+        const names = await Promise.all(namesPromises);
+
+        return names;
       } else {
         console.log("No such document!");
       }

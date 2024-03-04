@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import {createLobby, joinLobby, findNearbyLobbies} from  "./lobby.js";
-import {submitAnswer, tagPlayer, askQuestion, getUsers, getPoints, getQuestions} from "./gameMechanics.js";
+import {submitAnswer, tagPlayer, getUsers, getPoints, getQuestions} from "./gameMechanics.js";
 const router = express.Router();
 
 const checkGameArea = async (req, res, next) => {
