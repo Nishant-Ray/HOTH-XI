@@ -8,7 +8,7 @@ import {
     setDoc,
     updateDoc,
   } from "firebase/firestore";
-
+import { master_prompts } from "./questions.js";
 export const getUsers = async (lobbyID) => {
     const docRef = doc(db, "lobbies", lobbyID);
     const docSnap = await getDoc(docRef);
@@ -29,33 +29,16 @@ export const updateLocation = async (userLocation) => {
   }
 };
 
-export const setRole = async (lobbyID) => {
+export const getQuestions = async(lobbyID) =>{
     try {
-        players = getUsers(lobbyID);
-        // Randomly select a player to be the tagger
-        const taggerIndex = Math.floor(Math.random() * players.length);
-        const taggerId = players[taggerIndex];
-    
-        // Assign the tagger role to the selected player
-        const roles = {};
-        roles[taggerId] = "tagger";
-
-    
-        // Assign the taggee role to the rest of the players
-        players.forEach((playerId, index) => {
-          if (index !== taggerIndex) {
-            roles[playerId] = "taggee";
-          }
-        });
-    
-        // Implementation for setting roles in the database
-        // Example using Firebase Realtime Database
-        // await firebaseDatabase.ref(`lobbies/${lobbyId}/roles`).set(roles);
-    
-        return roles;//temp
-      } 
-    catch (error) {
-        throw new Error("Failed to set roles");
+        let index1 = Math.floor(Math.random() * master_prompts.length);
+        let index2 = Math.floor(Math.random() * master_prompts.length);
+        while (index2 === index1) {
+            index2 = Math.floor(Math.random() * master_prompts.length);
+        }
+    }
+    catch (err){
+        throw new Error("Failed to get questions");
     }
 };
 export const submitAnswer = async (playerId, answer) => {
