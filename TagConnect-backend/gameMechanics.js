@@ -49,6 +49,7 @@ export const getQuestions = async(lobbyID) =>{
         while (index2 === index1) {
             index2 = Math.floor(Math.random() * master_prompts.length);
         }
+        return index1, index2;
     }
     catch (err){
         throw new Error("Failed to get questions");
@@ -84,18 +85,6 @@ export const submitAnswer = async (playerId, answer) => {
     }
   };
 
-  export const askQuestion = async (question, playerId) => {
-    try {
-      // Implementation for asking a question in the database
-      // Example using Firebase Realtime Database
-      // await firebaseDatabase.ref(`players/${playerId}/question`).set(question);
-  
-      return { question, playerId };//temp
-    } catch (error) {
-      throw new Error("Failed to ask question");
-    }
-  };
-  
   export const getUserLocation = async (userId) => {
     // Implementation for getting user's location from the database
     const docRef = doc(db, "users", userId);

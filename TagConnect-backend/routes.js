@@ -189,12 +189,11 @@ router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   }
 });
 
-router.post("/ask-question/:askerId/:targetId", async (req, res) => {
+router.post("/ask-question", async (req, res) => {
   try {
-    const { question } = req.body;
-
+    const { taggee1_id, taggee2_id } = req.body;
     // Call the controller function to ask the question
-    const result = await getQuestions(question);
+    const result = await getQuestions();
     res.status(200).json({ message: "Question asked successfully", result });
   } catch (err) {
     res.status(500).json({ message: "Failed to ask question" });
