@@ -51,6 +51,14 @@ export const startGame = async(lobbyId) => {
   }
 }
 
+export const checkGameStarted = async (lobbyId) => {
+  try{
+    return await getDoc(doc(db, "lobbies", lobbyId)).data().started;
+  } catch (error) {
+        res.status(500).json({ message: "Game Startup Check Failed" });
+  }
+}
+
 export const updateLocation = async (userLocation) => {
   try {
     await updateDoc(doc(db, "users", auth.currentUser.uid), {

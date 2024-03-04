@@ -190,6 +190,21 @@ router.post("/start-game", async (req, res) => {
   }
 })
 
+router.post("/check-if-game-started", async (req, res) => {
+  try {
+    const { lobbyId } = req.body;
+
+    const result = await checkGameStarted(lobbyId);
+    res.status(200).json({ message: "Game started successfully", value: result });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to start game", error: error.message });
+  }
+});
+
+
+
 router.post("/tag-player", async (req, res) => {
   try {
       const { taggerId, taggeeId, lobbyId } = req.body;
