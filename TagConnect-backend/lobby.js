@@ -4,14 +4,18 @@ import { updateLocation, calculateDistanceInMeters, getAllLobbies } from "./game
 import { updateCurrentUser } from "firebase/auth";
 
 export const createLobby = async (user, isPrivate, location) => {
-  let code = Math.floor(100000 + Math.random() * 900000);
-  await setDoc(doc(db, "lobbies", code), {
-    location: [location.latitude, location.longitude],
-    players: [user],
-    private: isPrivate,
-    points: {user: 0},
-    tagger : ""
-  });
+  const code = Math.floor(100000 + Math.random() * 900000);
+  try {
+    await setDoc(doc(db, "lobbies", `${code}`), {
+      location: [location.latitude, location.longitude],
+      players: [user],
+      private: isPrivate,
+      points: {[user]: 0},
+      tagger : ""
+    });
+} catch (error) {
+  console.error(error);
+}
   return code;
 };
 

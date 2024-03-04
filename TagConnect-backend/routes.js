@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import {createLobby, joinLobby, findNearbyLobbies} from  "./lobby.js";
-import {submitAnswer, tagPlayer, askQuestion, getUsers, getPoints} from "./gameMechanics.js";
+import {submitAnswer, tagPlayer, askQuestion, getUsers, getPoints, getQuestions} from "./gameMechanics.js";
 const router = express.Router();
 
 const checkGameArea = async (req, res, next) => {
@@ -68,7 +68,7 @@ router.post("/signup", async (req, res) => {
           partner : "",
           tagged : false
       };
-      setDoc(doc(database, "users", user.uid), newUserData);
+      setDoc(doc(db, "users", user.uid), newUserData);
 
       return res
           .status(200)
@@ -114,12 +114,12 @@ router.post("/login", async (req, res) => {
               .json({ success: false, message: error.message });
       });
 });
+
 router.post("/create-lobby", async (req, res) => {
-
   const {location, isPrivate} = req.body;
-
   try {
     const code = await createLobby(auth.currentUser.uid, isPrivate, location);
+    console.log(code);
     res.status(200).json({ message: "Lobby created successfully", lobby : code });
   } catch (error) {
     res.status(500).json({ message: `Failed to create lobby: ${error.message}` });
@@ -179,7 +179,7 @@ router.post("/submit-answer/:playerId", async (req, res) => {
 
 router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   try {
-      const { taggeeId } = req.body;
+      const { taggerId, taggeeId, lobbyId } = req.body;
       // Call the controller function to tag the player
       const result = await tagPlayer(tageeId);
   
@@ -192,10 +192,10 @@ router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
 
 router.post("/ask-question/:askerId/:targetId", async (req, res) => {
   try {
-    const { playerId, question } = req.body;
+    const { question } = req.body;
 
     // Call the controller function to ask the question
-    const result = await askQuestion(question, playerId);
+    const result = await getQuestions(question);
     res.status(200).json({ message: "Question asked successfully", result });
   } catch (err) {
     res.status(500).json({ message: "Failed to ask question" });

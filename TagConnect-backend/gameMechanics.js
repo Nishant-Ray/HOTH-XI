@@ -66,11 +66,17 @@ export const submitAnswer = async (playerId, answer) => {
     }
   };
 
-  export const tagPlayer = async (taggeeId) => {
+  export const tagPlayer = async (taggerId, taggeeId, lobbyId) => {
     try {
       docRef = doc(db, "users", taggeeId);
+      const docSnap = await getDoc(doc(db, "lobbies", lobbyId));
+      const allPoints = docSnap.data()['points'];
+      const taggerPoints = allPoints.taggerId;
       await updateDoc(docRef, {
         tagged : true
+      })
+      await updateDoc(docRef, {
+        points : {[taggeeId] : 0, [taggerId] : taggerPoints + 200}
       })
       return true;
     } catch (error) {
@@ -90,7 +96,7 @@ export const submitAnswer = async (playerId, answer) => {
     }
   };
   
-  const getUserLocation = async (userId) => {
+  export const getUserLocation = async (userId) => {
     // Implementation for getting user's location from the database
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
@@ -125,7 +131,7 @@ export const submitAnswer = async (playerId, answer) => {
       Math.floor(Math.random() * users.length) && !alr_met.includes(partner);
     alr_met.push(partner);
   };
-  
+
 function calculateDistanceInMeters(location1, location2) {
     const earthRadius = 6371000; // Radius of the Earth in meters
     
