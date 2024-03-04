@@ -20,8 +20,12 @@ const HomeScreen = ({ navigation }) => {
 
     const { uid, setUid } = useUser();
 
-    const createLobby = () => {
+    const createPublicLobby = () => {
+        navigation.navigate("CreatePublicLobby");
+    };
 
+    const createPrivateLobby = () => {
+        navigation.navigate("CreatePrivateLobby");
     };
 
     const joinPublicLobby = () => {
@@ -55,8 +59,12 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.screen}>
             <Text style={styles.titleText}>TagConnect</Text>
 
-            <Pressable style={styles.playButton} onPress={createLobby}>
-                <Text style={styles.playButtonText}>Create a Lobby</Text>
+            <Pressable style={styles.playButton} onPress={createPublicLobby}>
+                <Text style={styles.playButtonText}>Create a Public Lobby</Text>
+            </Pressable>
+
+            <Pressable style={styles.playButton} onPress={createPrivateLobby}>
+                <Text style={styles.playButtonText}>Create a Private Lobby</Text>
             </Pressable>
 
             <Pressable style={styles.playButton} onPress={joinPublicLobby}>
@@ -84,7 +92,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontFamily: "Righteous_400Regular",
         fontSize: 56,
-        marginTop: 120,
+        marginTop: 80,
         marginBottom: 30,
         color: "#fa6161",
         alignSelf: "center",
@@ -95,20 +103,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         width: "80%",
         marginTop: 25,
-        marginBottom: 10,
+        marginBottom: 0,
         borderRadius: 5,
         backgroundColor: "#fa6161",
         alignSelf: "center",
     },
     playButtonText: {
         fontFamily: "Outfit_600SemiBold",
-        fontSize: 28,
+        fontSize: 22,
         color: "white",
         textAlign: "center",
         fontWeight: "bold",
     },
     tagContainer: {
-        marginTop: 75,
+        marginTop: 85,
         height: 250
     },
     tagPicture: {

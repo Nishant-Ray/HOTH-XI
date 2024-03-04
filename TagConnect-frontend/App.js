@@ -5,6 +5,8 @@ import HomeScreen from "./screens/HomeScreen.js";
 import MapScreen from "./screens/MapScreen.js";
 import LoginScreen from "./screens/LoginScreen.js";
 import SignUpScreen from "./screens/SignUpScreen.js";
+import CreatePublicLobbyScreen from "./screens/CreatePublicLobbyScreen.js";
+import CreatePrivateLobbyScreen from "./screens/CreatePrivateLobbyScreen.js";
 import { UserProvider } from "./UserContext.js";
 import { LogBox } from "react-native";
 
@@ -24,6 +26,8 @@ const TagConnect = () => {
                     <Stack.Screen name="SignUp" component={SignUpScreen} />
                     <Stack.Screen name="Home" component={HomeScreen} />
                     <Stack.Screen name="Map" component={MapScreen} />
+                    <Stack.Screen name="CreatePublicLobby" component={CreatePublicLobbyScreen} />
+                    <Stack.Screen name="CreatePrivateLobby" component={CreatePrivateLobbyScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </UserProvider>
