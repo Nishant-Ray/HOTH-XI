@@ -11,8 +11,8 @@ import {
 import { master_prompts } from "./questions.js";
 
 
-export const getUsers = async (lobbyID) => {
-    const docRef = doc(db, "lobbies", lobbyID);
+export const getUsers = async (lobbyId) => {
+    const docRef = doc(db, "lobbies", lobbyId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         console.log("Document data:", docSnap.data()['players']);
@@ -20,6 +20,16 @@ export const getUsers = async (lobbyID) => {
         console.log("No such document!");
       }
 };
+
+export const getPoints = async (lobbyId) => {
+  const docRef = doc(db, "lobbies", lobbyId);
+  const docSnap = await getDoc(docRef); 
+  if (docSnap.exists()) {
+     return docSnap.data()["points"];
+  } else {
+    console.log(`No lobby with name ${lobbyId}`);
+  }
+}
 
 export const updateLocation = async (userLocation) => {
   try {

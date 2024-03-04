@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import {createLobby, joinLobby, findNearbyLobbies} from  "./lobby.js";
-import {submitAnswer, tagPlayer, askQuestion, getUsers} from "./gameMechanics.js";
+import {submitAnswer, tagPlayer, askQuestion, getUsers, getPoints} from "./gameMechanics.js";
 const router = express.Router();
 
 const checkGameArea = async (req, res, next) => {
@@ -62,7 +62,8 @@ router.post("/signup", async (req, res) => {
           username: username,
           email: email,
           fullname: fullname,
-          location: [0,0]
+          location: [0,0],
+          points: 0
       };
       setDoc(doc(database, "users", user.uid), newUserData);
 
@@ -161,8 +162,7 @@ router.post("/end-game/:lobbyCode", async (req, res) => {
 
 router.post("/submit-answer/:playerId", async (req, res) => {
   try {
-      const { playerId } = req.params;
-      const { answer } = req.body;
+      const { playerId, answer } = req.body;
   
       // Call the controller function to submit the answer
       const result = await submitAnswer(playerId, answer);
@@ -176,7 +176,7 @@ router.post("/submit-answer/:playerId", async (req, res) => {
 
 router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   try {
-      const { taggerId, tageeId } = req.params;
+      const { taggerId, tageeId } = req.body;
       // Call the controller function to tag the player
       const result = await tagPlayer(taggerId, tageeId);
   
@@ -189,8 +189,7 @@ router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
 
 router.post("/ask-question/:askerId/:targetId", async (req, res) => {
   try {
-    const { playerId } = req.params;
-    const { question } = req.body;
+    const { playerId, question } = req.body;
 
     // Call the controller function to ask the question
     const result = await askQuestion(question, playerId);
@@ -202,7 +201,7 @@ router.post("/ask-question/:askerId/:targetId", async (req, res) => {
 
 router.get("/get-users-in-lobby/:lobbyId", async (req, res) => {
   try {
-    const { lobbyId } = req.params;
+    const { lobbyId } = req.body;
 
     // Call the controller function to get the lobby by its ID
     const lobby = await getUsers(lobbyId);
@@ -215,5 +214,19 @@ router.get("/get-users-in-lobby/:lobbyId", async (req, res) => {
     res.status(500).json({ message: "Failed to get users in lobby", error: error.message });
   }
 });
+
+router.post("/get-points/:lobbyId", async (req, res) => {
+  try {
+    const { lobbyId } = req.body;
+    
+    const points = await getPoints(lobbyId);
+    if (!points) {
+      return res.status(404).json({ message: "Lobby not found" });
+    }
+    res.status(200).json({ points });
+  } catch (error) {
+        res.status(500).json({ message: "Failed to get points of lobby", error: error.message });
+  }
+})
 
 export default router;
