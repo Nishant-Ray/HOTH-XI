@@ -17,7 +17,7 @@ const TagConnect = () => {
         <UserProvider>
             <NavigationContainer>
                 <Stack.Navigator
-                    initialRouteName="Map"
+                    initialRouteName="Login"
                     screenOptions={{ headerShown: false, gestureEnabled: false }}
                 >
                     <Stack.Screen name="Login" component={LoginScreen} />

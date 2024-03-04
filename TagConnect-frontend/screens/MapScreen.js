@@ -43,6 +43,7 @@ const MapScreen = ({ navigation }) => {
             }
 
             let location = await Location.getCurrentPositionAsync({});
+            console.log(location.coords);
             setCurrentLocation(location.coords);
 
             setInitialRegion({

@@ -3,26 +3,24 @@ import {
     View,
     Text,
     TextInput,
-    Button,
-    Image,
     StyleSheet,
     Pressable,
 } from "react-native";
 import { useUser } from "./../UserContext";
 import {
     useFonts,
-    JosefinSans_700Bold,
-    InterTight_600SemiBold,
-    InterTight_500Medium,
-    InterTight_700Bold,
+    Righteous_400Regular,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
 } from "@expo-google-fonts/dev";
 
 const LoginScreen = ({ navigation }) => {
     let [fontsLoaded, fontError] = useFonts({
-        JosefinSans_700Bold,
-        InterTight_600SemiBold,
-        InterTight_500Medium,
-        InterTight_700Bold,
+        Righteous_400Regular,
+        Outfit_400Regular,
+        Outfit_500Medium,
+        Outfit_600SemiBold,
     });
 
     const [email, setEmail] = useState("");
@@ -32,11 +30,9 @@ const LoginScreen = ({ navigation }) => {
 
     if (!fontsLoaded || fontError) {
         console.log("Error loading fonts");
-        return null;
     }
 
     const handleLogin = async () => {
-
         if (email == "" || password == "") {
             alert("Please enter an email and password!");
             return;
@@ -45,7 +41,7 @@ const LoginScreen = ({ navigation }) => {
         // Actual authentication logic using the backend server
         try {
             const response = await fetch(
-                `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/user/login`,
+                `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/login`,
                 {
                     method: "POST",
                     headers: {
@@ -93,45 +89,55 @@ const LoginScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.pingoText}>Pingo</Text>
+                <Text style={styles.titleText}>TagConnect</Text>
             </View>
 
             <View style={styles.formContainer}>
-                <Text style={styles.welcomeText}>Welcome Back</Text>
+                <View style={styles.formDiv}>
+                    <Text style={styles.welcomeText}>Welcome Back</Text>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    onChangeText={(text) => setEmail(text)}
-                    value={email}
-                />
-
-                <View style={styles.passwordContainer}>
                     <TextInput
-                        style={styles.passwordInput}
-                        placeholder="Password"
-                        secureTextEntry={!showPassword}
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
+                        style={styles.input}
+                        placeholder="Email"
+                        placeholderTextColor={"gray"}
+                        onChangeText={(text) => setEmail(text)}
+                        value={email}
                     />
-                    <Button
-                        title={showPassword ? "Hide" : "Show"}
-                        onPress={togglePasswordVisibility}
-                    />
+
+                    <View style={styles.passwordContainer}>
+                        <TextInput
+                            style={styles.passwordInput}
+                            placeholder="Password"
+                            placeholderTextColor={"gray"}
+                            secureTextEntry={!showPassword}
+                            onChangeText={(text) => setPassword(text)}
+                            value={password}
+                        />
+                        <Pressable style={styles.showPasswordButton}
+                            onPress={togglePasswordVisibility}
+                        >
+                            <Text style={styles.showPasswordText}>{showPassword ? "Hide" : "Show"}</Text>
+                        </Pressable>
+                    </View>
+
+                    <Pressable
+                        style={styles.loginButton}
+                        onPress={handleLogin}
+                    >
+                        <Text style={styles.loginButtonText}>Login</Text>
+                    </Pressable>
+
+                    <Text style={styles.signUpInfo}>
+                        Don't have an account?
+                    </Text>
+
+                    <Pressable
+                        style={styles.signUpButton}
+                        onPress={navigateToSignUp}
+                    >
+                        <Text style={styles.signUpButtonText}>Sign Up</Text>
+                    </Pressable>
                 </View>
-
-                <Pressable style={styles.loginButton} onPress={handleLogin}>
-                    <Text style={styles.loginButtonText}>Login</Text>
-                </Pressable>
-
-                <Text style={styles.signUpInfo}>Don't have an account?</Text>
-
-                <Pressable
-                    style={styles.signUpButton}
-                    onPress={navigateToSignUp}
-                >
-                    <Text style={styles.signUpButtonText}>Sign Up</Text>
-                </Pressable>
             </View>
         </View>
     );
@@ -143,52 +149,58 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff",
     },
     header: {
-        backgroundColor: "#A9E8BF",
+        backgroundColor: "white",
         width: "100%",
-        height: 300,
+        height: 200,
         alignItems: "flex-end",
     },
-    pingoText: {
-        fontFamily: "JosefinSans_700Bold",
-        fontSize: 80,
-        marginTop: 80,
-        color: "#1d714a",
+    titleText: {
+        fontFamily: "Righteous_400Regular",
+        fontSize: 56,
+        marginTop: 100,
+        color: "#fa6161",
         alignSelf: "center",
     },
     formContainer: {
         backgroundColor: "white",
         alignItems: "center",
-        paddingHorizontal: 30,
-        paddingTop: 50,
         width: "100%",
         height: "100%",
     },
+    formDiv: {
+        backgroundColor: "white",
+        paddingTop: 50,
+        width: "75%",
+        alignItems: "left",
+    },
     welcomeText: {
-        fontFamily: "InterTight_600SemiBold",
+        fontFamily: "Outfit_500Medium",
         fontSize: 28,
         marginBottom: 20,
         color: "#333330", // Updated text color
     },
     input: {
         height: 60,
-        width: "95%",
-        borderColor: "#ffffff",
-        borderRadius: 5,
-        backgroundColor: "#dddddd",
+        width: "100%",
+        backgroundColor: "white",
         color: "#333333",
         paddingHorizontal: 15,
         fontSize: 20,
-        fontFamily: "InterTight_500Medium",
+        backgroundColor: "#ffb8b8",
+        borderRadius: 7,
+        fontFamily: "Outfit_400Regular",
         overflow: "hidden",
+        alignSelf: "center",
     },
     passwordContainer: {
         flexDirection: "row",
         alignItems: "center",
-        width: "95%",
+        width: "100%",
         marginTop: 20,
-        marginBottom: 40,
-        borderRadius: 5,
-        backgroundColor: "#dddddd",
+        marginBottom: 20,
+        backgroundColor: "#ffb8b8",
+        borderRadius: 7,
+        alignSelf: "center",
     },
     passwordInput: {
         flex: 1,
@@ -196,45 +208,51 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         color: "#333333",
         fontSize: 20,
-        fontFamily: "InterTight_500Medium",
+        fontFamily: "Outfit_400Regular",
         overflow: "hidden",
+        alignSelf: "center",
     },
-    showHideButton: {
-        padding: 10,
-        backgroundColor: "#27ae60", // Updated button color
-        borderRadius: 8,
+    showPasswordButton: {
+        paddingRight: 10
     },
-    buttonText: {
-        color: "#ffffff",
+    showPasswordText: {
+        color: "#1f8df2",
+        fontFamily: "Outfit_600SemiBold",
+        fontSize: 18,
     },
     loginButton: {
-        backgroundColor: "#1D714A",
-        paddingVertical: 10,
+        backgroundColor: "#fa6161",
+        paddingVertical: 15,
         paddingHorizontal: 15,
-        width: "35%",
-        borderRadius: 80,
-        marginBottom: 80,
+        width: "100%",
+        marginTop: 25,
+        marginBottom: 40,
+        borderRadius: 5,
+        backgroundColor: "#fa6161",
+        alignSelf: "center",
     },
     loginButtonText: {
-        fontFamily: "InterTight_700Bold",
+        fontFamily: "Outfit_600SemiBold",
         fontSize: 20,
-        color: "#ffffff",
+        color: "white",
         textAlign: "center",
         fontWeight: "bold",
     },
     signUpInfo: {
         color: "#333333",
         fontSize: 18,
-        fontFamily: "InterTight_600SemiBold",
+        fontFamily: "Outfit_500Medium",
+        alignSelf: "center",
     },
     signUpButton: {
         backgroundColor: "#ffffff",
+        alignSelf: "center",
     },
     signUpButtonText: {
-        color: "#1D714A",
+        color: "#fa6161",
         textAlign: "center",
         fontSize: 18,
-        fontFamily: "InterTight_600SemiBold",
+        fontFamily: "Outfit_500Medium",
         textDecorationLine: "underline",
     },
 });
