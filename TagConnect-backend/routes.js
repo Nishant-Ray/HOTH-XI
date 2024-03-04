@@ -127,7 +127,6 @@ router.post("/create-lobby", async (req, res) => {
 });
 
 router.post("/join-lobby", async (req, res) => {
-
   try {
     const { code } = req.body;
     const lobby = await joinLobby(auth.currentUser.uid, code); 
