@@ -57,7 +57,7 @@ const LobbyScreen = ({ navigation, currentLobbyID }) => {
       const data = await response.json();
 
       if (response.status == 200) {
-        setLobbyID(data.lobby);
+        setUsers(data.users);
       } else {
         alert("Error finding users!");
       }
@@ -67,6 +67,37 @@ const LobbyScreen = ({ navigation, currentLobbyID }) => {
     }
   }
 
+  return (
+    <View style={styles.screen}>
+        <Text style={styles.titleText}>Lobby Code:</Text>
+        {lobbyID !== null ? (
+            <Text style={styles.lobbyCodeText}>{lobbyID}</Text>
+        ) : null}
+
+        <ScrollView>
+            {users.map((user, index) => (
+				<View style={styles.userBox}>
+					<Text style={styles.userText} key={index}>user</Text>
+				</View>
+            ))}
+        </ScrollView>
+
+    </View>
+  );
+
 };
+
+const styles = StyleSheet.create({
+    userBox: {
+        backgroundColor: "#d1d1d1",
+		width: "80%",
+		paddingVertical: 10,
+		marginBottom: 20,
+    },
+	userText: {
+		fontFamily: "Outfit_600SemiBold",
+        fontSize: 20,
+	}
+});
 
 export default LobbyScreen;

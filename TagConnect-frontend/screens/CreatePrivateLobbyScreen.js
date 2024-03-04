@@ -28,6 +28,7 @@ const CreatePrivateLobbyScreen = ({ navigation }) => {
 
     const [currentLocation, setCurrentLocation] = useState(null);
     const [lobbyID, setLobbyID] = useState(null);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
@@ -68,8 +69,43 @@ const CreatePrivateLobbyScreen = ({ navigation }) => {
                 console.log(error);
             }
         }
+
+        async function fetchUsersWhoJoined() {
+            try {
+                const response = await fetch(
+                    `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby/${lobbyID}`,
+                    {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        lobbyId : lobbyID
+                    }),
+                    }
+                );
+        
+                const data = await response.json();
+        
+                if (response.status == 200) {
+                    setUsers(data.users);
+                } else {
+                    alert("Error finding users!");
+                }
+            } catch (error) {
+                alert("Server error!");
+                console.log(error);
+            }
+        }
         
         fetchData();
+
+        const intervalId = setInterval(() => {
+            fetchUsersWhoJoined();
+        }, 5000);
+    
+        // Clean up the interval when the component unmounts
+        return () => clearInterval(intervalId);
         
     }, [])
 
@@ -87,7 +123,11 @@ const CreatePrivateLobbyScreen = ({ navigation }) => {
             ) : null}
 
             <ScrollView>
-                
+                {users.map((user, index) => (
+                    <View style={styles.userBox}>
+                        <Text style={styles.userText} key={index}>user</Text>
+                    </View>
+                ))}
             </ScrollView>
 
             <Pressable style={styles.playButton} onPress={startGame}>
@@ -119,6 +159,16 @@ const styles = StyleSheet.create({
         color: "black",
         alignSelf: "center",
     },
+    userBox: {
+        backgroundColor: "#d1d1d1",
+		width: "80%",
+		paddingVertical: 10,
+		marginBottom: 20,
+    },
+	userText: {
+		fontFamily: "Outfit_600SemiBold",
+        fontSize: 20,
+	},
     playButton: {
         backgroundColor: "#fa6161",
         paddingVertical: 15,
