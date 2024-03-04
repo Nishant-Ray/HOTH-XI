@@ -16,6 +16,7 @@ export const getUsers = async (lobbyId) => {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
         console.log("Document data:", docSnap.data()['players']);
+        return docSnap.data()['players'];
       } else {
         console.log("No such document!");
       }
@@ -55,24 +56,23 @@ export const getQuestions = async(lobbyID) =>{
 };
 export const submitAnswer = async (playerId, answer) => {
     try {
-      // Implementation for submitting the answer in the database
-      // Example using Firebase Realtime Database
-      // await firebaseDatabase.ref(`players/${playerId}/answer`).set(answer);
-  
-      return { playerId, answer };//temp
+      docRef = doc(db, "users", playerId);
+      await updateDoc(docRef, {
+        answer : answer
+      })
     } 
     catch (error) {
       throw new Error("Failed to submit answer");
     }
   };
 
-  export const tagPlayer = async (taggerId, tageeId) => {
+  export const tagPlayer = async (taggeeId) => {
     try {
-      // Implementation for tagging a player in the database
-      // Example using Firebase Realtime Database
-      // await firebaseDatabase.ref(`players/${tageeId}/taggedBy`).push(taggerId);
-  
-      return { taggerId, tageeId };//temp
+      docRef = doc(db, "users", taggeeId);
+      await updateDoc(docRef, {
+        tagged : true
+      })
+      return true;
     } catch (error) {
       throw new Error("Failed to tag player");
     }
@@ -118,6 +118,14 @@ export const submitAnswer = async (playerId, answer) => {
     }
   };
 
+  export const partnerFinder = async (lobbyID) => {
+    users = getUsers(lobbyID);
+    alr_met = [];
+    let partner =
+      Math.floor(Math.random() * users.length) && !alr_met.includes(partner);
+    alr_met.push(partner);
+  };
+  
 function calculateDistanceInMeters(location1, location2) {
     const earthRadius = 6371000; // Radius of the Earth in meters
     

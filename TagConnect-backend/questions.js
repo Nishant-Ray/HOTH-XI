@@ -112,10 +112,4 @@ const master_prompts = [
 
 export {master_prompts};
 
-export const partnerFinder = async(lobbyID) => {
-    users = getUsers(lobbyID);
-    alr_met = [];
-    let partner = Math.floor(Math.random() * users.length) && !alr_met.includes(partner);
-    alr_met.push(partner);
-};
 

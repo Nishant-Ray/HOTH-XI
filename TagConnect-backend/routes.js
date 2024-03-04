@@ -63,7 +63,10 @@ router.post("/signup", async (req, res) => {
           email: email,
           fullname: fullname,
           location: [0,0],
-          points: 0
+          points: 0,
+          answer : "",
+          partner : "",
+          tagged : false
       };
       setDoc(doc(database, "users", user.uid), newUserData);
 
@@ -176,9 +179,9 @@ router.post("/submit-answer/:playerId", async (req, res) => {
 
 router.post("/tag-player/:taggerId/:tageeId", async (req, res) => {
   try {
-      const { taggerId, tageeId } = req.body;
+      const { taggeeId } = req.body;
       // Call the controller function to tag the player
-      const result = await tagPlayer(taggerId, tageeId);
+      const result = await tagPlayer(tageeId);
   
       res.status(200).json({ message: "Player tagged successfully", result });
     } 
@@ -228,5 +231,6 @@ router.post("/get-points/:lobbyId", async (req, res) => {
         res.status(500).json({ message: "Failed to get points of lobby", error: error.message });
   }
 })
+
 
 export default router;

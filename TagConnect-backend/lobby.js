@@ -10,8 +10,7 @@ export const createLobby = async (user, isPrivate, location) => {
     players: [user],
     private: isPrivate,
     points: {user: 0},
-    taggerAnswer: "",
-    taggeeAnswer: {}
+    tagger : ""
   });
 };
 
