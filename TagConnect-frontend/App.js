@@ -36,10 +36,6 @@ const TagConnect = () => {
               component={CreatePrivateLobbyScreen}
             />
             <Stack.Screen
-              name="CreatePrivateLobby"
-              component={CreatePrivateLobbyScreen}
-            />
-            <Stack.Screen
               name="Lobby"
               component={LobbyScreen}
             />

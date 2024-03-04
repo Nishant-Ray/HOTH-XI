@@ -219,12 +219,12 @@ router.get("/get-users-in-lobby", async (req, res) => {
     const { lobbyId } = req.body;
 
     // Call the controller function to get the lobby by its ID
-    const lobby = await getUsers(lobbyId);
+    const users = await getUsers(lobbyId);
 
-    if (!lobby) {
+    if (!users) {
       return res.status(404).json({ message: "Lobby not found" });
     }
-    res.status(200).json({ lobby });
+    res.status(200).json({ users: users });
   } catch (error) {
     res.status(500).json({ message: "Failed to get users in lobby", error: error.message });
   }
