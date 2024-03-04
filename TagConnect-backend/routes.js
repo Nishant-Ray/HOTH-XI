@@ -62,7 +62,8 @@ router.post("/signup", async (req, res) => {
           username: username,
           email: email,
           fullname: fullname,
-          location: [0,0]
+          location: [0,0],
+          points: 0
       };
       setDoc(doc(database, "users", user.uid), newUserData);
 
