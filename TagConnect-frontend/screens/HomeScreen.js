@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
     };
 
     const joinPublicLobby = () => {
-        
+        navigation.navigate("FindPublicLobby");
     };
 
     function joinPrivateLobbyRoute(lobbyId) {

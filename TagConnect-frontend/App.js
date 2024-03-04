@@ -10,6 +10,7 @@ import CreatePrivateLobbyScreen from "./screens/CreatePrivateLobbyScreen.js";
 import { UserProvider } from "./UserContext.js";
 import { LogBox } from "react-native";
 import LobbyScreen from "./screens/LobbyScreen.js";
+import FindPublicLobbyScreen from "./screens/FindPublicLobbyScreen.js";
 
 LogBox.ignoreAllLogs();
 
@@ -38,6 +39,10 @@ const TagConnect = () => {
             <Stack.Screen
               name="Lobby"
               component={LobbyScreen}
+            />
+            <Stack.Screen
+              name="FindPublicLobby"
+              component={FindPublicLobbyScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
