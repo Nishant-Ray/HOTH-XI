@@ -119,8 +119,8 @@ router.post("/create-lobby", async (req, res) => {
   const {location, isPrivate} = req.body;
 
   try {
-    const lobby = await createLobby(auth.currentUser.uid, isPrivate, location);
-    res.status(200).json({ message: "Lobby created successfully", lobby });
+    const code = await createLobby(auth.currentUser.uid, isPrivate, location);
+    res.status(200).json({ message: "Lobby created successfully", lobby : code });
   } catch (error) {
     res.status(500).json({ message: `Failed to create lobby: ${error.message}` });
   }

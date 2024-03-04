@@ -12,6 +12,7 @@ export const createLobby = async (user, isPrivate, location) => {
     points: {user: 0},
     tagger : ""
   });
+  return code;
 };
 
 export const joinLobby = async (user) => {
