@@ -26,19 +26,12 @@ export const findNearbyLobbies = async (location, radius) => {
        const lobbiesMap = await getAllLobbies();
        const filteredLobbies = [];
        lobbiesMap.forEach((lobbyLocation, id) => {
-         const coordinatesMap = new Map();
-         coordinatesMap.set("latitude", lobbyLocation[0]);
-         coordinatesMap.set("longitude", lobbyLocation[1]);
-
-        console.log(location);
-        console.log(coordinatesMap);
-
-         console.log(calculateDistanceInMeters(location, coordinatesMap));
-         if (calculateDistanceInMeters(location, lobbyLocation) <= radius) {
+         const coordinatesMap = {longitude : lobbyLocation[1], latitude: lobbyLocation[0]};
+         if (calculateDistanceInMeters(location,coordinatesMap) <= radius) {
            filteredLobbies.push(id);
          }
        });
-
+       console.log(filteredLobbies);
        return filteredLobbies;
      } catch (error) {
        console.error("Error finding nearby lobbies: ", error);
