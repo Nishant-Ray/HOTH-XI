@@ -40,6 +40,17 @@ export const getPoints = async (lobbyId) => {
   }
 }
 
+export const startGame = async(lobbyId) => {
+  try{
+    await updateDoc(doc(db, "lobbies", lobbyId), {
+      started: true
+    })
+    return true;
+  }catch (error) {
+    res.status(500).json({ message: "Game Startup Failed" });
+  }
+}
+
 export const updateLocation = async (userLocation) => {
   try {
     await updateDoc(doc(db, "users", auth.currentUser.uid), {

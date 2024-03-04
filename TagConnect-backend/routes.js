@@ -16,7 +16,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import {createLobby, joinLobby, findNearbyLobbies} from  "./lobby.js";
-import {submitAnswer, tagPlayer, getUsers, getPoints, getQuestions} from "./gameMechanics.js";
+import {submitAnswer, tagPlayer, getUsers, getPoints, getQuestions, startGame} from "./gameMechanics.js";
 const router = express.Router();
 
 const checkGameArea = async (req, res, next) => {
@@ -146,7 +146,7 @@ router.post("/find-lobby", async (req, res) => {
     res.status(500).json({ message: "Failed to find public lobby" });
   }
 });
-router.post("/start-game/:lobbyCode", async (req, res) => {
+router.post("/start-game/", async (req, res) => {
   try {
     // Implementation for starting the game
   } catch (err) {
@@ -154,7 +154,7 @@ router.post("/start-game/:lobbyCode", async (req, res) => {
   }
 });
 
-router.post("/end-game/:lobbyCode", async (req, res) => {
+router.post("/end-game/", async (req, res) => {
   try {
     // Implementation for ending the game
   } catch (err) {
@@ -175,6 +175,20 @@ router.post("/submit-answer", async (req, res) => {
       res.status(500).json({ message: "Failed to submit answer", error: error.message });
     }
   });
+
+router.post("/start-game", async (req, res) => {
+  try {
+    const {lobbyId} = req.body;
+
+    const result = await startGame(lobbyId);
+      res.status(200).json({ message: "Game started successfully", result });
+  } catch (error) {
+          res
+            .status(500)
+            .json({ message: "Failed to start game", error: error.message });
+
+  }
+})
 
 router.post("/tag-player", async (req, res) => {
   try {
