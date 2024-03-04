@@ -146,13 +146,6 @@ router.post("/find-lobby", async (req, res) => {
     res.status(500).json({ message: "Failed to find public lobby" });
   }
 });
-router.post("/start-game/", async (req, res) => {
-  try {
-    // Implementation for starting the game
-  } catch (err) {
-    res.status(500).json({ message: "Failed to start game" });
-  }
-});
 
 router.post("/end-game/", async (req, res) => {
   try {
