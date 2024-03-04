@@ -2,12 +2,10 @@ import express from "express";
 import { createServer } from "node:http"
 import bodyParser from 'body-parser';
 import router  from "./routes.js";
-import { Server as SocketServer} from "socket.io";
 
 // Port that the server API is listening to
 const app = express();
 const server = createServer(app);
-const io = new SocketServer(server);
 
 // Middleware
 app.use(bodyParser.json());
@@ -26,5 +24,3 @@ server.listen(portNum, hostName, async () => {
 
   console.log(`Server running at http://${hostName}:${port}`);
 });
-
-export { io } 

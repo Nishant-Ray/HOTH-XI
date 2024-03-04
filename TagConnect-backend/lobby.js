@@ -1,4 +1,3 @@
-import { io } from "./app.js";
 import { db, auth } from "./firebase.js";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { updateLocation, calculateDistanceInMeters, getAllLobbies } from "./gameMechanics.js";
