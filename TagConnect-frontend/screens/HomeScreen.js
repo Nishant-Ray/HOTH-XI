@@ -32,8 +32,37 @@ const HomeScreen = ({ navigation }) => {
         
     };
 
-    function joinPrivateLobbyRoute(code) {
-        console.log(code);
+    function joinPrivateLobbyRoute(lobbyId) {
+        async function fetchData() {
+          try {
+            const response = await fetch(
+              `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/join-lobby`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  code: lobbyId
+                }),
+              }
+            );
+
+            const data = await response.json();
+
+            if (response.status == 200) {
+              setLobbyID(data.lobby);
+            } else {
+              alert("Error joining private lobby!");
+            }
+          } catch (error) {
+            alert("Server error!");
+            console.log(error);
+          }
+        }
+
+        fetchData();
+        navigation.navigate("LobbyScreen");
     };
 
     const joinPrivateLobby = () => {
