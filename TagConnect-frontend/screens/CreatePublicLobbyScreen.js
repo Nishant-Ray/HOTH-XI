@@ -65,7 +65,7 @@ const CreatePublicLobbyScreen = ({ navigation }) => {
         async function fetchUsersWhoJoined() {
             try {
                 const response = await fetch(
-                    `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby/${lobbyID}`,
+                    `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby`,
                     {
                     method: "POST",
                     headers: {
@@ -103,8 +103,32 @@ const CreatePublicLobbyScreen = ({ navigation }) => {
 
     const { uid, setUid } = useUser();
 
-    const startGame = () => {
-        navigation.navigate("Map");
+    const startGame = async () => {
+        try {
+			const response = await fetch(
+				`${process.env.EXPO_PUBLIC_BACKEND_SERVER}/start-game`,
+				{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					lobbyId : lobbyID
+				}),
+				}
+			);
+	
+			const data = await response.json();
+	
+			if (response.status == 200) {
+				navigation.navigate("Map");
+			} else {
+				alert("Error finding users!");
+			}
+		} catch (error) {
+			alert("Server error!");
+			console.log(error);
+		}
     };
 
     return (

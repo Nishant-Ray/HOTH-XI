@@ -73,7 +73,7 @@ const CreatePrivateLobbyScreen = ({ navigation }) => {
         async function fetchUsersWhoJoined() {
             try {
                 const response = await fetch(
-                    `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby/${lobbyID}`,
+                    `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby`,
                     {
                     method: "POST",
                     headers: {

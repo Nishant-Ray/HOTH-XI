@@ -27,45 +27,77 @@ const LobbyScreen = ({ navigation, currentLobbyID }) => {
   });
   const [currentLocation, setCurrentLocation] = useState(null);
   const [lobbyID, setLobbyID] = useState(currentLobbyID);
+  const [gameStarted, setGameStarted] = useState(false);
   const [users, setUsers] = useState([]);
 
-  async function fetchData() {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission to access location was denied");
-      return;
-    }
+  useEffect(() => {
 
-    let location = await Location.getCurrentPositionAsync({});
-    console.log(location.coords);
-    setCurrentLocation(location.coords);
+	async function fetchData() {
+		try {
+			const response = await fetch(
+				`${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby`,
+				{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					lobbyId : lobbyID
+				}),
+				}
+			);
+	
+			const data = await response.json();
+	
+			if (response.status == 200) {
+				setUsers(data.users);
+			} else {
+				alert("Error finding users!");
+			}
+		} catch (error) {
+			alert("Server error!");
+			console.log(error);
+		}
 
-    try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_BACKEND_SERVER}/get-users-in-lobby/${lobbyID}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            lobbyId : lobbyID
-          }),
-        }
-      );
+		try {
+			const response = await fetch(
+				`${process.env.EXPO_PUBLIC_BACKEND_SERVER}/check-if-game-started`,
+				{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					lobbyId : lobbyID
+				}),
+				}
+			);
+	
+			const data = await response.json();
+	
+			if (response.status == 200) {
+				setGameStarted(data.value);
+			} else {
+				alert("Error finding users!");
+			}
+		} catch (error) {
+			alert("Server error!");
+			console.log(error);
+		}
 
-      const data = await response.json();
+		if(gameStarted) {
+			navigation.navigate("Map");
+		}
+	}
 
-      if (response.status == 200) {
-        setUsers(data.users);
-      } else {
-        alert("Error finding users!");
-      }
-    } catch (error) {
-      alert("Server error!");
-      console.log(error);
-    }
-  }
+	const intervalId = setInterval(() => {
+		fetchData();
+	}, 5000);
+
+	// Clean up the interval when the component unmounts
+	return () => clearInterval(intervalId);
+	
+}, [])
 
   return (
     <View style={styles.screen}>
